@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+    <div class="hero-inner">
+        <h2 class="hero-title">Discover the latest tech</h2>
+        <p class="hero-subtitle">Phones, laptops, accessories and more — curated and quality-checked.</p>
+        <form class="hero-search" action="/search/" method="get">
+            <input name="q" class="search-input" placeholder="Search for gadgets...">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </div>
+    <div class="hero-glow"></div>
+    <div class="hero-grid-pattern"></div>
+    <div class="hero-orb"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="hero-orb orb-3"></div>
+    <div class="hero-orb orb-4"></div>
+    <div class="hero-orb orb-5"></div>
+    <div class="hero-orb orb-6"></div>
+    <div class="hero-orb orb-7"></div>
+    <div class="hero-orb orb-8"></div>
+</section>
+
+<h2 class="section-title">Browse Categories</h2>
+<ul class="category-list">
+    {% for c in categories %}
+    <li><a href="{% url 'store:category' c.slug %}">{{ c.name }}</a></li>
+    {% empty %}<li class="muted">No categories.</li>{% endfor %}
+</ul>
+
+<div class="spacer"></div>
+<h2 class="section-title">Latest Products</h2>
+<div class="product-grid">
+    {% for p in products %}
+    {% include "partials/product_card.html" with product=p %}
+    {% empty %}
+    <p class="muted">No products.</p>
+    {% endfor %}
+</div>
+{% endblock %}

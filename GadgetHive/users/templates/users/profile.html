@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="profile">
+    <div class="profile-card">
+        <div class="avatar">{{ user.username|slice:":1"|upper }}</div>
+        <div class="profile-info">
+            <h2 class="section-title">{{ user.username }}</h2>
+            <p class="muted">{{ user.email|default:"No email set" }}</p>
+            <div class="spacer"></div>
+            <a class="btn" href="/orders/">View Orders</a>
+        </div>
+    </div>
+    <div class="profile-meta">
+        <div class="card">
+            <h3>Account</h3>
+            <p class="muted">Member since {{ user.date_joined|date:"M Y" }}</p>
+        </div>
+    </div>
+    <style>
+        .profile {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        @media (min-width: 900px) {
+            .profile {
+                grid-template-columns: 1.3fr 1fr;
+            }
+        }
+
+        .profile-card {
+            display: grid;
+            grid-template-columns: 72px 1fr;
+            gap: 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+
+        .avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            background: linear-gradient(180deg, rgba(37, 99, 235, 0.18), rgba(37, 99, 235, 0.08));
+            border: 1px solid rgba(37, 99, 235, 0.25);
+        }
+
+        .profile-info h2 {
+            margin: 0;
+        }
+
+        .profile-meta .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+
+        .profile-meta h3 {
+            margin: 0 0 8px 0;
+        }
+    </style>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %}
+<div class="product-detail">
+    <div class="product-detail-media">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <div class="product-media" style="border-radius: 8px;">
+            <div class="product-placeholder">{{ product.name|slice:":1" }}</div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="product-detail-info">
+        <h2 class="section-title">{{ product.name }}</h2>
+        <div class="product-price">₹{{ product.price|floatformat:0|intcomma }}</div>
+        <div class="spacer"></div>
+        <p class="muted">{{ product.description }}</p>
+        <div class="spacer"></div>
+        <form action="{% url 'cart:add' product.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Add to Cart</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

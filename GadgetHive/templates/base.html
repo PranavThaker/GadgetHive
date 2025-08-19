@@ -1,0 +1,155 @@
+{% load static %}
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>GadgetHive</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+            rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
+        {% load humanize %}
+    </head>
+
+    <body>
+        <header class="site-header">
+            <div class="container header-inner">
+                <h1 class="logo"><a href="/">GadgetHive</a></h1>
+
+                <!-- Mobile menu button -->
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <nav class="nav" id="mainNav">
+                    <a href="/">Home</a>
+                    <a href="/cart/">Cart</a>
+                    <a href="/orders/">Orders</a>
+                    {% if user.is_staff %}
+                    <a href="/admin/">Admin</a>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <a href="/users/profile/">Profile</a>
+                    <form action="{% url 'users:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Logout</button>
+                    </form>
+                    {% else %}
+                    <a href="/users/login/">Login</a>
+                    <a href="/users/register/">Register</a>
+                    {% endif %}
+                </nav>
+
+                <!-- Search bar - always visible -->
+                <form class="search" action="/search/" method="get">
+                    <input name="q" class="search-input" placeholder="Search products"
+                        value="{{ request.GET.q|default_if_none:'' }}" autocomplete="off">
+                </form>
+            </div>
+        </header>
+        <main class="container section">
+            {% block content %}{% endblock %}
+        </main>
+        <footer class="site-footer footer-alt">
+            <div class="container footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">GadgetHive</div>
+                    <p class="muted">Your trusted destination for the latest gadgets at great prices.</p>
+                </div>
+                <div>
+                    <div class="footer-title">Shop</div>
+                    <ul class="plain-list">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/orders/">Orders</a></li>
+                        <li><a href="/cart/">Cart</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-title">Account</div>
+                    <ul class="plain-list">
+                        {% if user.is_authenticated %}
+                        <li><a href="/users/profile/">Profile</a></li>
+                        <li>
+                            <form action="{% url 'users:logout' %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-link" type="submit">Logout</button>
+                            </form>
+                        </li>
+                        {% else %}
+                        <li><a href="/users/login/">Login</a></li>
+                        <li><a href="/users/register/">Register</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="container footer-bottom">© {% now "Y" %} GadgetHive — Crafted with care.</div>
+        </footer>
+        <script>
+            (function () {
+                // Mobile menu functionality
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                const mainNav = document.getElementById('mainNav');
+
+                if (mobileMenuBtn && mainNav) {
+                    mobileMenuBtn.addEventListener('click', function () {
+                        mainNav.classList.toggle('nav-open');
+                        mobileMenuBtn.classList.toggle('active');
+                    });
+
+                    // Close menu when clicking outside
+                    document.addEventListener('click', function (e) {
+                        if (!mobileMenuBtn.contains(e.target) && !mainNav.contains(e.target)) {
+                            mainNav.classList.remove('nav-open');
+                            mobileMenuBtn.classList.remove('active');
+                        }
+                    });
+                }
+
+                // Active nav highlighting (client-side, robust)
+                var path = window.location.pathname || "/";
+                var nav = document.querySelector('.nav');
+                if (nav) {
+                    var links = nav.querySelectorAll('a[href]');
+                    links.forEach(function (a) {
+                        var href = a.getAttribute('href');
+                        if (href === '/') {
+                            if (path === '/') a.classList.add('active');
+                        } else if (path.indexOf(href) === 0) {
+                            a.classList.add('active');
+                        }
+                    });
+                }
+
+                document.addEventListener('submit', function (e) {
+                    var form = e.target;
+                    if (form.dataset.submitting === 'true') {
+                        e.preventDefault();
+                        return false;
+                    }
+                    form.dataset.submitting = 'true';
+                    var btn = form.querySelector('button[type="submit"], input[type="submit"]');
+                    if (btn) { btn.disabled = true; }
+                }, true);
+
+                var confirmLinks = document.querySelectorAll('a.btn-danger, a[href*="/cart/clear/"]');
+                confirmLinks.forEach(function (a) {
+                    a.addEventListener('click', function (e) {
+                        var msg = a.classList.contains('btn-danger') ? 'Remove this item?' : 'Clear your cart?';
+                        if (!confirm(msg)) { e.preventDefault(); }
+                    });
+                });
+
+                // Clear any existing search queries from localStorage
+                if (localStorage.getItem('lastSearchQuery')) {
+                    localStorage.removeItem('lastSearchQuery');
+                }
+            })();
+        </script>
+    </body>
+
+</html>

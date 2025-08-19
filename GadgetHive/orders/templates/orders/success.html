@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2 class="section-title">Order Placed!</h2>
+    <p>Your order #{{ order.id }} has been placed.</p>
+    <p><a class="btn btn-primary" href="{% url 'orders:list' %}">Go to Orders</a></p>
+</div>
+{% endblock %}

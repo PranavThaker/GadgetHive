@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="section-title">Search Results</h2>
+<div class="product-grid">
+    {% for p in products %}
+    {% include "partials/product_card.html" with product=p %}
+    {% empty %}
+    <p class="muted">No matching products.</p>
+    {% endfor %}
+</div>
+{% endblock %}

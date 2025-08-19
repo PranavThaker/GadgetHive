@@ -1,0 +1,15 @@
+{% load humanize %}
+{% comment %}Reusable product card partial. Expects `product` in context.{% endcomment %}
+<a class="product-card" href="{% url 'store:product' product.slug %}">
+    <div class="product-media">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <div class="product-placeholder">{{ product.name|slice:":1" }}</div>
+        {% endif %}
+    </div>
+    <div class="product-info">
+        <h3 class="product-title">{{ product.name }}</h3>
+        <div class="product-price">₹{{ product.price|floatformat:0|intcomma }}</div>
+    </div>
+</a>
